@@ -15,7 +15,10 @@ const App: React.FC = () => {
   const [pipelineStage, setPipelineStage] = useState<PipelineStage>(PipelineStage.IDLE);
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [logs, setLogs] = useState<ProcessingLog[]>([]);
+  
+  // Selection State
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([Region.KENYA, Region.EAST_AFRICA]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>(Object.values(Category));
   
   const autoPilotRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -53,16 +56,29 @@ const App: React.FC = () => {
         return;
     }
 
+    if (selectedCategories.length === 0) {
+      addLog("PAUSED: No categories selected. Please enable at least one category.", "info");
+      setPipelineStage(PipelineStage.IDLE);
+      return;
+    }
+    
+    if (selectedRegions.length === 0) {
+      addLog("PAUSED: No regions selected. Please enable at least one region.", "info");
+      setPipelineStage(PipelineStage.IDLE);
+      return;
+    }
+
     try {
       // 1. SELECT TARGET
-      const categories = Object.values(Category);
       let targetRegion: Region;
       if (selectedRegions.includes(Region.KENYA) && Math.random() > 0.4) {
         targetRegion = Region.KENYA;
       } else {
         targetRegion = selectedRegions[Math.floor(Math.random() * selectedRegions.length)];
       }
-      const targetCategory = categories[Math.floor(Math.random() * categories.length)];
+
+      // Pick only from selected categories
+      const targetCategory = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];
 
       // --- STAGE 1: SCAN ---
       setPipelineStage(PipelineStage.SCANNING);
@@ -86,7 +102,14 @@ const App: React.FC = () => {
       setPipelineStage(PipelineStage.VERIFYING);
       addLog(`[VERIFIER] Cross-referencing ${trendData.sources.length} sources...`, "action");
       
-      let article = await draftBriefing(trendData.topic, trendData.context, targetCategory, targetRegion, trendData.sources);
+      let article = await draftBriefing(
+        trendData.topic, 
+        trendData.context, 
+        targetCategory, 
+        targetRegion, 
+        trendData.sources,
+        selectedCategories
+      );
       
       if (article.verificationScore < 50) {
          addLog(`[RISK CONTROL] Topic rejected. Low verification score (${article.verificationScore}%).`, "error");
@@ -117,7 +140,7 @@ const App: React.FC = () => {
       addLog(`[SYSTEM FAILURE] Agent Cycle Error: ${error.message}`, "error");
       setPipelineStage(PipelineStage.IDLE);
     }
-  }, [selectedRegions]);
+  }, [selectedRegions, selectedCategories]);
 
   useEffect(() => {
     if (isAutoPilot) {
@@ -145,6 +168,14 @@ const App: React.FC = () => {
     );
   };
 
+  const toggleCategory = (cat: Category) => {
+    setSelectedCategories(prev =>
+      prev.includes(cat)
+        ? prev.filter(c => c !== cat)
+        : [...prev, cat]
+    );
+  };
+
   return (
     <div className="min-h-screen bg-brand-black flex flex-col font-sans">
       <Header isConnected={isConnected} onConnect={isConnected ? handleDisconnect : handleConnect} />
@@ -161,7 +192,8 @@ const App: React.FC = () => {
               Mission Control
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Region Selection */}
               <div>
                 <label className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-2 block">Region Focus</label>
                 <div className="flex flex-wrap gap-2">
@@ -181,6 +213,27 @@ const App: React.FC = () => {
                 </div>
               </div>
 
+              {/* Category Selection */}
+              <div>
+                <label className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-2 block">Category Focus</label>
+                <div className="flex flex-wrap gap-2">
+                  {Object.values(Category).map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => toggleCategory(cat)}
+                      className={`px-2 py-1 text-[10px] border rounded-sm transition-all ${
+                        selectedCategories.includes(cat)
+                          ? 'bg-gray-800 border-gray-400 text-white'
+                          : 'border-brand-secondary text-gray-600 hover:border-gray-500'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Autopilot Controls */}
               <div className="pt-4 border-t border-brand-secondary">
                 <button
                   onClick={() => setIsAutoPilot(!isAutoPilot)}
@@ -210,6 +263,7 @@ const App: React.FC = () => {
             <h2 className="text-white font-display font-bold text-2xl">Live Wire</h2>
             <div className="text-xs text-gray-500 font-mono flex gap-4">
               <span>ACTIVE REGIONS: {selectedRegions.length}</span>
+              <span>CATS: {selectedCategories.length}</span>
               <span>ITEMS: {articles.length}</span>
             </div>
           </div>

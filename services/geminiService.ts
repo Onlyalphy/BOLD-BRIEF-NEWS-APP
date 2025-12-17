@@ -8,16 +8,48 @@ const getClient = () => {
 };
 
 // Detailed configuration based on region and category
-const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; weight: number }>>> = {
+const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; weight: number; image_prompt?: string }>>> = {
   [Region.KENYA]: {
-    [Category.GEOPOLITICS]: { query: "Kenya politics OR #KenyaPolitics OR Ruto OR Raila lang:en place_country:KE", weight: 1.3 },
-    [Category.BUSINESS]: { query: "Kenya business OR Nairobi Stock Exchange OR #KenyaEconomy lang:en place_country:KE", weight: 1.2 },
-    [Category.AI]: { query: "Kenya AI OR #KenyaTech OR Nairobi innovation lang:en place_country:KE", weight: 1.1 },
-    [Category.CRYPTO]: { query: "Kenya crypto OR Nairobi stocks OR #KenyaCrypto lang:en place_country:KE", weight: 1.0 },
-    [Category.HEALTH]: { query: "Kenya health OR #KenyaHealth OR Ministry of Health lang:en place_country:KE", weight: 1.2 },
-    [Category.CLIMATE]: { query: "Kenya climate OR drought OR floods OR #ClimateKenya lang:en place_country:KE", weight: 1.3 },
-    [Category.ENTERTAINMENT]: { query: "Kenya entertainment OR #KenyaMusic OR #KenyaFilm OR celebrity lang:en place_country:KE", weight: 0.8 },
-    [Category.WAR]: { query: "Kenya border security OR KDF OR Al-Shabaab lang:en place_country:KE", weight: 1.3 }
+    [Category.GEOPOLITICS]: { 
+      query: "Kenya politics OR #KenyaPolitics OR Ruto OR Raila lang:en place_country:KE", 
+      weight: 1.3,
+      image_prompt: "Kenyan parliament building with flag, symbolic political atmosphere, neutral journalistic style"
+    },
+    [Category.BUSINESS]: { 
+      query: "Kenya business OR Nairobi Stock Exchange OR #KenyaEconomy lang:en place_country:KE", 
+      weight: 1.2,
+      image_prompt: "Nairobi skyline with stock market charts overlay, modern business theme"
+    },
+    [Category.AI]: { 
+      query: "Kenya AI OR #KenyaTech OR Nairobi innovation lang:en place_country:KE", 
+      weight: 1.1,
+      image_prompt: "Futuristic Nairobi tech hub with AI icons and digital streams"
+    },
+    [Category.CRYPTO]: { 
+      query: "Kenya crypto OR Nairobi stocks OR #KenyaCrypto lang:en place_country:KE", 
+      weight: 1.0,
+      image_prompt: "Digital coins and stock tickers blended with Nairobi cityscape"
+    },
+    [Category.HEALTH]: { 
+      query: "Kenya health OR #KenyaHealth OR Ministry of Health lang:en place_country:KE", 
+      weight: 1.2,
+      image_prompt: "Kenyan hospital exterior with medical icons, clean and factual"
+    },
+    [Category.CLIMATE]: { 
+      query: "Kenya climate OR drought OR floods OR #ClimateKenya lang:en place_country:KE", 
+      weight: 1.3,
+      image_prompt: "Dry cracked earth and floodwaters in Kenya, climate impact visual"
+    },
+    [Category.ENTERTAINMENT]: { 
+      query: "Kenya entertainment OR #KenyaMusic OR #KenyaFilm OR celebrity lang:en place_country:KE", 
+      weight: 0.8,
+      image_prompt: "Concert crowd in Nairobi with bright lights and music notes"
+    },
+    [Category.WAR]: { 
+      query: "Kenya border security OR KDF OR Al-Shabaab lang:en place_country:KE", 
+      weight: 1.3,
+      image_prompt: "Neutral tactical map of Kenya border region, strategic overview"
+    }
   },
   [Region.EAST_AFRICA]: {
     [Category.GEOPOLITICS]: { query: "East Africa politics OR EAC OR Uganda OR Tanzania OR Rwanda lang:en", weight: 1.3 },
@@ -40,14 +72,46 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
     [Category.WAR]: { query: "Africa conflict OR Sudan war OR Sahel security lang:en", weight: 1.3 }
   },
   [Region.GLOBAL]: {
-    [Category.GEOPOLITICS]: { query: "global politics OR geopolitics OR #WorldPolitics lang:en", weight: 1.4 },
-    [Category.BUSINESS]: { query: "global economy OR #BusinessNews OR IMF OR World Bank lang:en", weight: 1.3 },
-    [Category.AI]: { query: "AI OR #ArtificialIntelligence OR #TechNews lang:en", weight: 1.2 },
-    [Category.CRYPTO]: { query: "crypto OR Bitcoin OR Ethereum OR #StockMarket lang:en", weight: 1.1 },
-    [Category.HEALTH]: { query: "global health OR WHO OR #HealthNews lang:en", weight: 1.3 },
-    [Category.CLIMATE]: { query: "climate change OR #ClimateCrisis OR COP lang:en", weight: 1.4 },
-    [Category.ENTERTAINMENT]: { query: "global entertainment OR #Hollywood OR #MusicNews OR celebrity lang:en", weight: 0.9 },
-    [Category.WAR]: { query: "Ukraine war OR Gaza conflict OR global security lang:en", weight: 1.4 }
+    [Category.GEOPOLITICS]: { 
+      query: "global politics OR geopolitics OR #WorldPolitics lang:en", 
+      weight: 1.4,
+      image_prompt: "World map with flags and symbolic political leaders silhouettes"
+    },
+    [Category.BUSINESS]: { 
+      query: "global economy OR #BusinessNews OR IMF OR World Bank lang:en", 
+      weight: 1.3,
+      image_prompt: "Global financial charts with skyscrapers and currency symbols"
+    },
+    [Category.AI]: { 
+      query: "AI OR #ArtificialIntelligence OR #TechNews lang:en", 
+      weight: 1.2,
+      image_prompt: "Abstract AI brain with glowing circuits and futuristic background"
+    },
+    [Category.CRYPTO]: { 
+      query: "crypto OR Bitcoin OR Ethereum OR #StockMarket lang:en", 
+      weight: 1.1,
+      image_prompt: "Bitcoin and Ethereum coins with digital trading charts"
+    },
+    [Category.HEALTH]: { 
+      query: "global health OR WHO OR #HealthNews lang:en", 
+      weight: 1.3,
+      image_prompt: "World health symbol with doctors and medical icons"
+    },
+    [Category.CLIMATE]: { 
+      query: "climate change OR #ClimateCrisis OR COP lang:en", 
+      weight: 1.4,
+      image_prompt: "Earth with extreme weather visuals, storms and drought side by side"
+    },
+    [Category.ENTERTAINMENT]: { 
+      query: "global entertainment OR #Hollywood OR #MusicNews OR celebrity lang:en", 
+      weight: 0.9,
+      image_prompt: "Red carpet event with cameras flashing, global entertainment vibe"
+    },
+    [Category.WAR]: { 
+      query: "Ukraine war OR Gaza conflict OR global security lang:en", 
+      weight: 1.4,
+      image_prompt: "Digital global map highlighting conflict zones, neutral tone"
+    }
   }
 };
 
@@ -130,23 +194,24 @@ export const draftBriefing = async (
   context: string,
   category: Category,
   region: Region,
-  existingSources: Source[]
+  existingSources: Source[],
+  enabledCategories: Category[]
 ): Promise<NewsArticle> => {
   const ai = getClient();
 
   const prompt = `
-    Topic: ${topic}
-    Region: ${region}
+    Write a neutral, concise news brief on: ${topic}. 
+    Use facts only from these sources: ${existingSources.map(s => s.title).join(', ')}. 
     
-    VERIFICATION PROTOCOL:
-    1. Cross-reference with sources: ${existingSources.map(s => s.title).join(', ')}.
-    2. Require 2+ independent sources. If <2, set status to 'developing'.
+    Requirements:
+    - Include headline, 3–5 key points, regional context, implications, and 2–4 citations.
+    - Length: 120–220 words.
+    - Label as Verified or Developing.
+    - Time-stamp: ${new Date().toUTCString()}.
+    - Generate a matching AI image using the category-specific image prompt.
+    - Categories enabled: ${enabledCategories.join(', ')}.
     
-    BRIEF GENERATION:
-    - Tone: Neutral, Factual, Concise (120-220 words).
-    - Headline: <100 chars, punchy.
-    - Key Points: 3-5 bullets.
-    - Context: Why it matters for ${region}.
+    Context: Why it matters for ${region}.
     
     Output JSON:
     {
@@ -193,19 +258,26 @@ export const draftBriefing = async (
 export const generateBriefImage = async (article: NewsArticle): Promise<string | undefined> => {
   const ai = getClient();
 
-  // Tailored prompts per category
+  // Get specific visual guidance from config if available
+  const regionConfig = REGION_CONFIG[article.region];
+  const categoryConfig = regionConfig?.[article.category];
+  const specificPrompt = categoryConfig?.image_prompt;
+
+  // Fallback visual styles if no specific prompt matches
   let visualStyle = "modern, journalistic, clean, editorial illustration";
-  if (article.category === Category.GEOPOLITICS) visualStyle += ", symbolic, flags, parliament silhouette, neutral map";
-  if (article.category === Category.ENTERTAINMENT) visualStyle += ", concert lighting, red carpet, cinematic, celebrity silhouette";
-  if (article.category === Category.CLIMATE) visualStyle += ", earth from space, weather patterns, nature photography style";
-  if (article.category === Category.CRYPTO) visualStyle += ", digital finance abstract, blockchain nodes, market graph";
-  if (article.category === Category.WAR) visualStyle += ", map based, neutral topographic, strategic overview, no violence";
+  if (!specificPrompt) {
+    if (article.category === Category.GEOPOLITICS) visualStyle += ", symbolic, flags, parliament silhouette, neutral map";
+    if (article.category === Category.ENTERTAINMENT) visualStyle += ", concert lighting, red carpet, cinematic, celebrity silhouette";
+    if (article.category === Category.CLIMATE) visualStyle += ", earth from space, weather patterns, nature photography style";
+    if (article.category === Category.CRYPTO) visualStyle += ", digital finance abstract, blockchain nodes, market graph";
+    if (article.category === Category.WAR) visualStyle += ", map based, neutral topographic, strategic overview, no violence";
+  }
 
   const prompt = `
     Generate a news header image.
     Headline: "${article.headline}"
     Context: ${article.summary.substring(0, 100)}
-    Style: ${visualStyle}.
+    ${specificPrompt ? `Specific Visual Theme: ${specificPrompt}` : `Style: ${visualStyle}`}
     Aspect Ratio: 16:9.
     Constraint: No text overlay. Photorealistic or high-end vector art.
   `;
