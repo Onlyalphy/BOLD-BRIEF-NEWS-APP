@@ -13,7 +13,9 @@ export enum Category {
   WAR = 'Wars & Conflict',
   HEALTH = 'Health',
   CLIMATE = 'Climate Change',
-  ENTERTAINMENT = 'Entertainment'
+  ENTERTAINMENT = 'Entertainment',
+  SEX_HEALTH = 'Sex & Reproductive Health',
+  GOSSIP = 'Celebrity Gossip & Scandals'
 }
 
 export enum PipelineStage {

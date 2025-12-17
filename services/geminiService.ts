@@ -35,6 +35,11 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
       weight: 1.2,
       image_prompt: "Kenyan hospital exterior with medical icons, clean and factual"
     },
+    [Category.SEX_HEALTH]: { 
+      query: "Kenya reproductive health OR #LindaMama OR contraceptives Kenya OR maternal health KE OR #SRHRKenya lang:en place_country:KE", 
+      weight: 1.1,
+      image_prompt: "Medical illustration of reproductive health awareness, neutral and educational, teal and white color palette"
+    },
     [Category.CLIMATE]: { 
       query: "Kenya climate OR drought OR floods OR #ClimateKenya lang:en place_country:KE", 
       weight: 1.3,
@@ -44,6 +49,11 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
       query: "Kenya entertainment OR #KenyaMusic OR #KenyaFilm OR celebrity lang:en place_country:KE", 
       weight: 0.8,
       image_prompt: "Concert crowd in Nairobi with bright lights and music notes"
+    },
+    [Category.GOSSIP]: { 
+      query: "Kenya celebrity gossip OR #KenyaTea OR #NairobiGossip OR viral scandal Kenya lang:en place_country:KE", 
+      weight: 0.7,
+      image_prompt: "Tabloid style collage, blurred silhouettes, paparazzi flash aesthetic, neon pink accents"
     },
     [Category.WAR]: { 
       query: "Kenya border security OR KDF OR Al-Shabaab lang:en place_country:KE", 
@@ -57,8 +67,10 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
     [Category.AI]: { query: "East Africa AI OR #TechAfrica OR innovation lang:en", weight: 1.1 },
     [Category.CRYPTO]: { query: "East Africa crypto OR #CryptoAfrica OR stock market lang:en", weight: 1.0 },
     [Category.HEALTH]: { query: "East Africa health OR #HealthAfrica OR WHO Africa lang:en", weight: 1.2 },
+    [Category.SEX_HEALTH]: { query: "East Africa reproductive health OR maternal health Uganda Tanzania OR #SexualHealthAfrica lang:en", weight: 1.1, image_prompt: "African community health worker illustration, educational and warm tones" },
     [Category.CLIMATE]: { query: "East Africa climate OR drought OR floods OR #ClimateAfrica lang:en", weight: 1.3 },
     [Category.ENTERTAINMENT]: { query: "East Africa entertainment OR #MusicAfrica OR #FilmAfrica lang:en", weight: 0.8 },
+    [Category.GOSSIP]: { query: "East Africa celebrity news OR Diamond Platnumz OR Zari Hassan OR #EastAfricaGossip lang:en", weight: 0.7, image_prompt: "Vibrant abstract collage of microphones and camera lenses" },
     [Category.WAR]: { query: "East Africa conflict OR DRC conflict OR Somalia lang:en", weight: 1.3 }
   },
   [Region.AFRICA]: {
@@ -67,8 +79,10 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
     [Category.AI]: { query: "Africa AI OR #AfricaTech OR innovation lang:en", weight: 1.1 },
     [Category.CRYPTO]: { query: "Africa crypto OR #CryptoAfrica OR Johannesburg Stock Exchange lang:en", weight: 1.0 },
     [Category.HEALTH]: { query: "Africa health OR #HealthAfrica OR WHO Africa lang:en", weight: 1.2 },
+    [Category.SEX_HEALTH]: { query: "Africa reproductive health OR WHO Africa health OR #SRHAfrica lang:en", weight: 1.1, image_prompt: "Map of Africa with health care symbols, clean medical aesthetic" },
     [Category.CLIMATE]: { query: "Africa climate OR #ClimateAfrica OR COP lang:en", weight: 1.3 },
     [Category.ENTERTAINMENT]: { query: "Africa entertainment OR #Afrobeats OR #AfricanFilm lang:en", weight: 0.8 },
+    [Category.GOSSIP]: { query: "African celebrity gossip OR Nollywood scandal OR Afrobeats drama OR #AfricaGossip lang:en", weight: 0.7, image_prompt: "Red carpet background with stylized question marks and camera flashes" },
     [Category.WAR]: { query: "Africa conflict OR Sudan war OR Sahel security lang:en", weight: 1.3 }
   },
   [Region.GLOBAL]: {
@@ -97,6 +111,11 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
       weight: 1.3,
       image_prompt: "World health symbol with doctors and medical icons"
     },
+    [Category.SEX_HEALTH]: { 
+      query: "global reproductive health OR planned parenthood OR WHO sexual health OR #ReproductiveRights lang:en", 
+      weight: 1.2,
+      image_prompt: "Minimalist illustration of diverse people holding hands, health cross symbol, soft tones"
+    },
     [Category.CLIMATE]: { 
       query: "climate change OR #ClimateCrisis OR COP lang:en", 
       weight: 1.4,
@@ -106,6 +125,11 @@ const REGION_CONFIG: Record<Region, Partial<Record<Category, { query: string; we
       query: "global entertainment OR #Hollywood OR #MusicNews OR celebrity lang:en", 
       weight: 0.9,
       image_prompt: "Red carpet event with cameras flashing, global entertainment vibe"
+    },
+    [Category.GOSSIP]: { 
+      query: "celebrity gossip OR TMZ OR Hollywood scandal OR viral celebrity news lang:en", 
+      weight: 0.8,
+      image_prompt: "Bold typography 'BREAKING' with abstract celebrity silhouettes and paparazzi lighting"
     },
     [Category.WAR]: { 
       query: "Ukraine war OR Gaza conflict OR global security lang:en", 
@@ -271,6 +295,8 @@ export const generateBriefImage = async (article: NewsArticle): Promise<string |
     if (article.category === Category.CLIMATE) visualStyle += ", earth from space, weather patterns, nature photography style";
     if (article.category === Category.CRYPTO) visualStyle += ", digital finance abstract, blockchain nodes, market graph";
     if (article.category === Category.WAR) visualStyle += ", map based, neutral topographic, strategic overview, no violence";
+    if (article.category === Category.SEX_HEALTH) visualStyle += ", medical aesthetic, teal and white, educational, diverse community";
+    if (article.category === Category.GOSSIP) visualStyle += ", neon lights, blurred paparazzi flash, tabloid collage aesthetic";
   }
 
   const prompt = `
